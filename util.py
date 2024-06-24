@@ -127,30 +127,18 @@ import csv
 #     writer = csv.writer(file3)
 #     writer.writerows(unbroken)
 
-
-###################################
-# google translate api encounter connection error
-from deep_translator import GoogleTranslator
-translator = GoogleTranslator(source='auto', target='en')
-def detect_translate(row):
-    new_row = row[:2]
-    for s in row[2:]:
-        try:
-            s.encode(encoding='utf-8').decode('ascii')
-            new_row.append(s)
-        except UnicodeDecodeError:
-            new_row.append(translator.translate(s))
-    return new_row
-with open('./vidInfo3_backup1.csv', 'r', newline='', encoding='utf-8') as file,\
-     open('./vidInfo3_backup1_translated.csv', 'a', newline='', encoding='utf-8') as file2:
+with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file,\
+     open('./vidInfo3.csv', 'w', newline='', encoding='utf-8') as file2:
     reader = csv.reader(file)
     writer = csv.writer(file2)
-    processed = 255
-    for _ in range(processed): next(reader)
     for row in reader:
-        print(detect_translate(row))
-        break
-        writer.writerow(text)
-        processed += 1
-        print(processed)
+        # these broken lines cause google translate api encounter connection error
+        # they are non surgery videos, just remove them
+        if 'r3kw-EUfp_w' in row[1] or 'aQP32wekSYo' in row[1] or '0wJSJsXU5Zw' in row[1] or '7nleNIyJK-8' in row[1]:
+            print("found")
+            continue
+        if len(row) < 3:
+            print(row)
+            continue
+        writer.writerow(row)
 

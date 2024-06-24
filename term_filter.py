@@ -18,14 +18,23 @@ with open('./tables/10cates.txt', 'r', encoding='utf-8') as file: #refined by pr
 
 def detect_translate(row):
     new_row = row[:2]
+    # if len(row) < 3: print(row[1])
     for s in row[2:]:
         try:
             s.encode(encoding='utf-8').decode('ascii')
             new_row.append(s)
         except UnicodeDecodeError:
-            new_row.append(translator.translate(s))
-        except deep_translator.exceptions.RequestError:
-            time.sleep(2) # google api allows 5 requests per second max
+            try:
+                new_row.append(translator.translate(s))
+            except deep_translator.exceptions.RequestError:
+                time.sleep(2) # google api allows 5 requests per second max
+                # new_row.append(translator.translate(s))
+                print(row[1])
+                new_row.append("")
+    try:
+        ' '.join(new_row[3:])
+    except TypeError:
+        print(row[1])
     return new_row
 
 
@@ -47,9 +56,8 @@ def hit(infot):
 
 ret = []
 vidInfoWithCate = []
-with open('./vidInfo3_backup1.csv', 'r', newline='', encoding='utf-8') as file:
+with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file:
     reader = csv.reader(file)
-    # for _ in range(500): next(reader)
     for row in reader:
         print(reader.line_num)
         row = detect_translate(row)

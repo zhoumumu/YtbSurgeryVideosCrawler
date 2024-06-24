@@ -18,7 +18,7 @@ TODO:
 
 
 def resume(source_reader, source, filed):
-    shutil.copyfile("./tables/vidInfo3.csv", "G:vidInfo3_backup.csv")
+    shutil.copyfile("./tables/vidInfo3.csv", "./vidInfo3_backup.csv")
 
     broke_row = None
     for broke_row in csv.reader(filed): pass
@@ -88,10 +88,10 @@ def main(source, destination, resume_flag=True):
             if resume_flag:
                 pos = vids.index(last_vid)
                 resume_flag = False
-                if pos+1 == len(vids): continue # broke row恰好下载完
-                print("resume from ", pos+1, " / ", len(vids))
-                vids = vids[pos+1:]
+                print("resume from ", pos, " / ", len(vids))
+                vids = vids[pos:] # the last row might be broken, so download it again
             print(row[0], collections['totalVideos'])
+            if "Lukan Mishev" in row[0]: continue # repeated channel src
 
             # parse video metadata vid by vid
             for vid in vids:
