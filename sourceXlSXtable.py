@@ -8,7 +8,7 @@ import chardet
 #筛选7个低质量playlists视频源（lowQualitySrcPlaylist.csv）
 
 
-wb = xlrd.open_workbook('../videoSrc_list_RMduplicated.xlsx')
+wb = xlrd.open_workbook('./tables/videoSrc_list_RMduplicated.xlsx')
 #按工作簿定位工作表
 sh = wb.sheet_by_name('YouTube视频等收集')
 # print(sh.nrows)#有效数据行数
@@ -24,6 +24,7 @@ def remove_non_gbk_chars(string):
 highQualitySrc = []
 highQualitySrcU = []
 lowQualitySrcPlaylist = []
+lowQualitySrcChannel = []
 ytb_total = 0
 for i in range(1, sh.nrows-1):
     # if 'youtube' in sh.cell(i,1).value:
@@ -43,6 +44,9 @@ for i in range(1, sh.nrows-1):
         if 'playlist' in sh.cell(i,1).value:
             lowQualitySrcPlaylist.append([sh.cell(i,0).value, sh.cell(i,1).value,
                                sh.cell(i,2).value, sh.cell(i,3).value])
+        else:
+            lowQualitySrcChannel.append([sh.cell(i,0).value, sh.cell(i,1).value,
+                               sh.cell(i,2).value, sh.cell(i,3).value])
 
 # print(ytb_total)
 # print(len(highQualitySrc), len(highQualitySrcU))
@@ -52,7 +56,11 @@ for i in range(1, sh.nrows-1):
 #     writer = csv.writer(file2) #['Src', 'Link', 'Total', '#Surgery']
 #     writer.writerows(highQualitySrcU)
 
-with open('../lowQualitySrcPlaylist.csv', 'w', newline='', encoding='utf-8') as file2:
+# with open('../lowQualitySrcPlaylist.csv', 'w', newline='', encoding='utf-8') as file2:
+#     writer = csv.writer(file2) #['Src', 'Link', 'Total', '#Surgery']
+#     writer.writerows(lowQualitySrcPlaylist)
+
+with open('./tables/lowQualitySrcChannel.csv', 'w', newline='', encoding='utf-8') as file2:
     writer = csv.writer(file2) #['Src', 'Link', 'Total', '#Surgery']
-    writer.writerows(lowQualitySrcPlaylist)
+    writer.writerows(lowQualitySrcChannel)
     

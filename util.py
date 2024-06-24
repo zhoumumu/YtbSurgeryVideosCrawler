@@ -1,5 +1,6 @@
 import csv
 
+###################################
 # # process multihit, make analysis
 # multihit = []
 # with open('../vidInfo_rawClassfied.csv', 'r', newline='', encoding='utf-8') as file,\
@@ -14,19 +15,22 @@ import csv
 #     writer.writerows(multihit)
 
 
+###################################
 # process nohit, make analysis
-multihit = []
-with open('./tables/vidInfo_rawClassfied2.csv', 'r', newline='', encoding='utf-8') as file,\
-    open('../nohit2.csv', 'w', newline='', encoding='utf-8') as f:
-    reader = csv.reader(file)
-    for row in reader:
-        if len(row[1].strip().split(';')) == 1:
-            multihit.append(row)
+# multihit = []
+# with open('./tables/vidInfo_rawClassfied2.csv', 'r', newline='', encoding='utf-8') as file,\
+#     open('../nohit2.csv', 'w', newline='', encoding='utf-8') as f:
+#     reader = csv.reader(file)
+#     for row in reader:
+#         if len(row[1].strip().split(';')) == 1:
+#             multihit.append(row)
 
-    print(len(multihit))
-    writer = csv.writer(f)
-    writer.writerows(multihit)
+#     print(len(multihit))
+#     writer = csv.writer(f)
+#     writer.writerows(multihit)
 
+
+###################################
 # get extra link in description, get more tags for potential useful terms
 # tags = []
 # links = []
@@ -56,3 +60,97 @@ with open('./tables/vidInfo_rawClassfied2.csv', 'r', newline='', encoding='utf-8
 #     tags_ = list(set(tags) - set(categories))
 #     for t in tags_:
 #         f2.write(t+'\n')
+
+
+###################################
+# _csv.Error: line contains NUL, which is b'\x00'
+# NULL keep csv reader from enumerating, we can remove them in binary mode
+# analyze topic catagory
+# f = open('./tables/vidInfo3.csv', 'rb')
+# data = f.read()
+# # print(data.find(b'\x00'))
+# # print(data.find(0))
+# # print(data[110721])
+# # for i, c in enumerate(data):
+# #     if c == 0:
+# #         print(repr(data[i-30:i]) + ' *NUL* ' + repr(data[i+1:i+31]))
+# f = open('./tables/vidInfo3.csv', 'r', encoding='utf-8')
+# for c in f.read():
+#     if ord(c) == 0:
+#         print("sdga")
+# f.close()
+# data = data.replace(b'\x00', b'')
+# # print(data.count(b'\x00'))
+# new_f = open('./tables/samples.csv', 'wb')
+# new_f.write(data)
+# new_f.close()
+
+# TC = {}
+# with open('./tables/samples.csv', 'r', newline='', encoding='utf-8') as file:
+#     reader = csv.reader(file)
+#     for row in reader:
+#         if row[2] not in TC:
+#             TC[row[2]] = 1
+#         else:
+#             TC[row[2]] += 1
+# print(len(TC)) #54
+# print(sorted(TC.items(), key=lambda x:x[1], reverse=True))
+#头部TC：healthknowledge', 5330), ('health', 208), ('healthsociety', 168), ('knowledge', 63), ('healthsocietytelevision_program', 48), ('', 33)
+#除去如Music这样的显著不合理的，还打算保留的TC：('healthknowledgetelevision_program', 28), ('technology', 25), ('healthlifestyle_(sociology)', 21)，('knowledgetechnology', 9), ('healthtechnology', 8)， ('societytelevision_program', 4)
+#抽查不合格TC：('society', 33), ('hobbylifestyle_(sociology)', 3), 合格TC：'lifestyle_(sociology)', 16)
+# #make grouping rules
+# for tc in TC:
+#     if 'health' in tc: continue
+#     print(tc)
+
+
+# ###################################
+# # vidInfo3.csv is broken bcuz of wps
+# with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file,\
+#      open('G:vidInfo3_backup1.csv', 'r', newline='', encoding='utf-8') as file2,\
+#      open('./vidInfo3_backup1.csv', 'w', newline='', encoding='utf-8') as file3:
+#     vids = set()
+#     unbroken = []
+
+#     reader = csv.reader(file2)
+#     for row in reader:
+#         if row[1] not in vids:
+#             vids.add(row[1])
+#             unbroken.append(row)
+
+#     reader = csv.reader(file)
+#     for row in reader:
+#         if row[1] not in vids:
+#             vids.add(row[1])
+#             unbroken.append(row)
+
+#     writer = csv.writer(file3)
+#     writer.writerows(unbroken)
+
+
+###################################
+# google translate api encounter connection error
+from deep_translator import GoogleTranslator
+translator = GoogleTranslator(source='auto', target='en')
+def detect_translate(row):
+    new_row = row[:2]
+    for s in row[2:]:
+        try:
+            s.encode(encoding='utf-8').decode('ascii')
+            new_row.append(s)
+        except UnicodeDecodeError:
+            new_row.append(translator.translate(s))
+    return new_row
+with open('./vidInfo3_backup1.csv', 'r', newline='', encoding='utf-8') as file,\
+     open('./vidInfo3_backup1_translated.csv', 'a', newline='', encoding='utf-8') as file2:
+    reader = csv.reader(file)
+    writer = csv.writer(file2)
+    processed = 255
+    for _ in range(processed): next(reader)
+    for row in reader:
+        print(detect_translate(row))
+        break
+        writer.writerow(text)
+        processed += 1
+        print(processed)
+
