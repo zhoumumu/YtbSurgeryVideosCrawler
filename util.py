@@ -1,4 +1,5 @@
 import csv
+import shutil
 
 ###################################
 # # process multihit, make analysis
@@ -106,6 +107,7 @@ import csv
 
 # # ###################################
 # vidInfo3.csv is somewhat broken
+# shutil.copyfile('./tables/vidInfo3.csv', './vidInfo3_backup.csv')
 # with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file:
 #     reader = csv.reader(file)
 #     rows = []
@@ -115,20 +117,22 @@ import csv
 #         # if 'r3kw-EUfp_w' in row[1] or 'aQP32wekSYo' in row[1] or '0wJSJsXU5Zw' in row[1] or '7nleNIyJK-8' in row[1]:
 #         #     print("found")
 #         #     continue
-#         if len(row) < 3:
-#             print(row)
-#             continue
-#         if 'http' not in row[0]:
+#         # if len(row) < 3:
+#         #     print(row)
+#         #     continue
+#         # if 'http' not in row[0]:
+#         #     continue
+#         if 'https://soundcloud.com/bym-megamind/gold-bomb-slowing-down-no-copyright' in row[0]:
 #             continue
 #         rows.append(row)
 # with open('./tables/vidInfo3.csv', 'w', newline='', encoding='utf-8') as file:
 #     writer = csv.writer(file)
 #     writer.writerows(rows)
 
-# analyze how many videos left, compare with #total and #estimation
+# analyze how many videos downloaded and left, compare with #total and #estimation
 count = {}
 estimate = {}
-with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-8') as file:
+with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file:
     reader = csv.reader(file)
     for row in reader:
         if row[0] not in count:
@@ -138,6 +142,25 @@ with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-
 with open('./tables/lowQualitySrcChannel.csv', 'r', newline='', encoding='utf-8') as file2:
     reader2 = csv.reader(file2)
     for row in reader2:
-        estimate[row[1]] = row[3]
-for k,v in count.items():
-    print(k, "\t\tleft:", v, "\t\testimate:", estimate[k])
+        estimate[row[1]] = row[2]
+for k,v in estimate.items():
+    if k not in count:
+        print(k, "undownload")
+    elif int(v) > int(count[k]):
+        print(k, "total:", v, "\downloaded:", count[k])
+
+# reorganize srcChannel.csv: move the downloaded channels to the front
+# downloaded = []
+# unDownloaded = []
+# with open('./tables/lowQualitySrcChannel.csv', 'r', newline='', encoding='utf-8') as file2:
+#     reader2 = csv.reader(file2)
+#     for row in reader2:
+#         if row[1] in count:
+#             downloaded.append(row)
+#             print(reader2.line_num, "downloaded")
+#         else:
+#             unDownloaded.append(row)
+#             print(reader2.line_num, "not downloaded")
+# with open('./tables/lowQualitySrcChannel_re.csv', 'w', newline='', encoding='utf-8') as file:
+#     writer = csv.writer(file)
+#     writer.writerows(downloaded + unDownloaded)

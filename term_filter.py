@@ -61,7 +61,7 @@ with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file,\
                       'technology', 'healthlifestyle_(sociology)', 'knowledgetechnology', 'healthtechnology',
                       'societytelevision_program', 'lifestyle_(sociology)']: continue
         # rule2: title should not contain
-        if any(x in row[3] for x in ['examination', 'sign', 'symptoms', 'Tomography', 'observ']): continue
+        if any(x in row[3] for x in ['examination', 'sign', 'symptoms', 'Tomography', 'observ', 'demonstration', 'animation']): continue
         
         text = ' '.join(row[3:]) #TypeError: sequence item 2: expected str instance, NoneType found, row 27402
         h,hc = hit(text.lower())
