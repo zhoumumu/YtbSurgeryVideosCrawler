@@ -104,41 +104,40 @@ import csv
 #     print(tc)
 
 
-# ###################################
-# # vidInfo3.csv is broken bcuz of wps
-# with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file,\
-#      open('G:vidInfo3_backup1.csv', 'r', newline='', encoding='utf-8') as file2,\
-#      open('./vidInfo3_backup1.csv', 'w', newline='', encoding='utf-8') as file3:
-#     vids = set()
-#     unbroken = []
-
-#     reader = csv.reader(file2)
-#     for row in reader:
-#         if row[1] not in vids:
-#             vids.add(row[1])
-#             unbroken.append(row)
-
+# # ###################################
+# vidInfo3.csv is somewhat broken
+# with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file:
 #     reader = csv.reader(file)
+#     rows = []
 #     for row in reader:
-#         if row[1] not in vids:
-#             vids.add(row[1])
-#             unbroken.append(row)
+#         # these broken lines cause google translate api encounter connection error
+#         # they are non surgery videos, just remove them
+#         # if 'r3kw-EUfp_w' in row[1] or 'aQP32wekSYo' in row[1] or '0wJSJsXU5Zw' in row[1] or '7nleNIyJK-8' in row[1]:
+#         #     print("found")
+#         #     continue
+#         if len(row) < 3:
+#             print(row)
+#             continue
+#         if 'http' not in row[0]:
+#             continue
+#         rows.append(row)
+# with open('./tables/vidInfo3.csv', 'w', newline='', encoding='utf-8') as file:
+#     writer = csv.writer(file)
+#     writer.writerows(rows)
 
-#     writer = csv.writer(file3)
-#     writer.writerows(unbroken)
-
-with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file,\
-     open('./vidInfo3.csv', 'w', newline='', encoding='utf-8') as file2:
+# analyze how many videos left, compare with #total and #estimation
+count = {}
+estimate = {}
+with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-8') as file:
     reader = csv.reader(file)
-    writer = csv.writer(file2)
     for row in reader:
-        # these broken lines cause google translate api encounter connection error
-        # they are non surgery videos, just remove them
-        if 'r3kw-EUfp_w' in row[1] or 'aQP32wekSYo' in row[1] or '0wJSJsXU5Zw' in row[1] or '7nleNIyJK-8' in row[1]:
-            print("found")
-            continue
-        if len(row) < 3:
-            print(row)
-            continue
-        writer.writerow(row)
-
+        if row[0] not in count:
+            count[row[0]] = 1
+        else:
+            count[row[0]] += 1
+with open('./tables/lowQualitySrcChannel.csv', 'r', newline='', encoding='utf-8') as file2:
+    reader2 = csv.reader(file2)
+    for row in reader2:
+        estimate[row[1]] = row[3]
+for k,v in count.items():
+    print(k, "\t\tleft:", v, "\t\testimate:", estimate[k])

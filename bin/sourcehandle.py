@@ -31,7 +31,7 @@ def resume(source_reader, source, filed):
     fast_pointer = open(source, 'r', encoding='utf-8')
     for row in fast_pointer:
         current_link = row.split(',')[1]
-        if current_link == broke_row[0]: break
+        if current_link == broke_row[0]: break #前提是保证链接表不重复
         next(source_reader)
     fast_pointer.close()
     return broke_row[1][1:-1] # return last vid
@@ -91,7 +91,6 @@ def main(source, destination, resume_flag=True):
                 print("resume from ", pos, " / ", len(vids))
                 vids = vids[pos:] # the last row might be broken, so download it again
             print(row[0], collections['totalVideos'])
-            if "Lukan Mishev" in row[0]: continue # repeated channel src
 
             # parse video metadata vid by vid
             for vid in vids:

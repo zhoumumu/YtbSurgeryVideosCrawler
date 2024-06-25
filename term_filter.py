@@ -1,6 +1,5 @@
 import csv
 import time
-import numpy as np
 import deep_translator
 translator = deep_translator.GoogleTranslator(source='auto', target='en')
 # -*- coding: utf-8 -*-
@@ -31,10 +30,6 @@ def detect_translate(row):
                 # new_row.append(translator.translate(s))
                 print(row[1])
                 new_row.append("")
-    try:
-        ' '.join(new_row[3:])
-    except TypeError:
-        print(row[1])
     return new_row
 
 
@@ -54,12 +49,11 @@ def hit(infot):
     return list(hit), hit_cates
 
 
-ret = []
-vidInfoWithCate = []
-with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file:
+with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file,\
+     open("./tables/vidInfo3_rawClassfied.csv", 'a', newline='', encoding='utf-8') as filed:
+    writer = csv.writer(filed)
     reader = csv.reader(file)
     for row in reader:
-        print(reader.line_num)
         row = detect_translate(row)
         # rule1: filter by TC
         if row[2] not in ['healthknowledge', 'health', 'healthsociety', 'knowledge',
@@ -69,22 +63,16 @@ with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file:
         # rule2: title should not contain
         if any(x in row[3] for x in ['examination', 'sign', 'symptoms', 'Tomography', 'observ']): continue
         
-        text = ' '.join(row[3:])
+        text = ' '.join(row[3:]) #TypeError: sequence item 2: expected str instance, NoneType found, row 27402
         h,hc = hit(text.lower())
         #rule3: discard rows with empty TC, and no hit, and contain non of these keywords
         if row[2] == '' and len(h) == 0 and \
-            not any(x in row[5:] for x in ['surgery', 'technique', 'technology', 'management']) and \
-            not any(x in row[3] for x in ['surgery', 'technique', 'technology', 'management']): continue
+            not any(x in row[5:] for x in ['surgery', 'operation', 'technique', 'technology', 'management']) and \
+            not any(x in row[3] for x in ['surgery', 'operation', 'technique', 'technology', 'management']): continue
 
         row.insert(3, hc)
-        vidInfoWithCate.append(row)
-        ret.append([row[1], ','.join([str(i) for i in h]) ])
-        
-
-with open("./tables/vidInfo3_rawClassfied2.csv", 'w', newline='', encoding='utf-8') as file:
-    writer = csv.writer(file)
-    writer.writerows(vidInfoWithCate)
-np.save("./tables/vid3_withCatas.npy", np.array(ret))
+        row.insert(4, ','.join([str(i) for i in h]))
+        writer.writerow(row)
 
 
 # count = [0] * 11
