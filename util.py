@@ -168,18 +168,18 @@ import shutil
 
 ############################################
 # get vids
-# with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-8') as files,\
-#      open('./vids.txt', 'w') as filed:
-#     reader = csv.reader(files)
-#     for row in reader:
-#         filed.write(row[1]+'\n')
+with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-8') as files,\
+     open('./tables/vids3.txt', 'w') as filed:
+    reader = csv.reader(files)
+    for row in reader:
+        filed.write(row[1]+'\n')
 
 # concate two csv files
-shutil.copyfile('./tables/vidInfo3_rawClassfied2.csv', './vidInfo3_rawClassified2.csv')
-shutil.copyfile('./tables/vidInfo3_rawClassified.csv', './vidInfo3_rawClassified.csv')
-with open('./tables/vidInfo3_rawClassified.csv', 'a', newline='', encoding='utf-8') as file,\
-     open('./tables/vidInfo3_rawClassfied2.csv', 'r', newline='', encoding='utf-8') as file2:
-    writer = csv.writer(file)
-    reader2 = csv.reader(file2)
-    for row in reader2:
-        writer.writerow(row)
+# shutil.copyfile('./tables/vidInfo3_rawClassfied2.csv', './vidInfo3_rawClassified2.csv')
+# shutil.copyfile('./tables/vidInfo3_rawClassified.csv', './vidInfo3_rawClassified.csv')
+# with open('./tables/vidInfo3_rawClassified.csv', 'a', newline='', encoding='utf-8') as file,\
+#      open('./tables/vidInfo3_rawClassfied2.csv', 'r', newline='', encoding='utf-8') as file2:
+#     writer = csv.writer(file)
+#     reader2 = csv.reader(file2)
+#     for row in reader2:
+#         writer.writerow(row)

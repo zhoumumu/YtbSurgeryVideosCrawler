@@ -27,4 +27,4 @@ vidInfo2.csv -> vidInfo_rawClassfied2.csv -> 手工补上singles.csv的分类，
 剩余channel source（lowQualitySrcChannel.csv）// 里面混入了一个视频链接手动修改过了
 爬信息过程合并->vidInfo3.csv，后续用脚本去过重了
 上面爬断了的部分条目处理完NULL->samples.csv 用于分析topc catagory
-翻译并打上数字标签->vidInfo3_rawClassified.csv
+翻译并打上数字标签->vidInfo3_rawClassified.csv -> vids3.txt

@@ -34,13 +34,6 @@ def crosscheck_videos(video_path, ann_file):
             non_existing_videos.append(vid)
     return non_existing_videos
 
-def isEnglish(s):
-    try:
-        s.encode(encoding='utf-8').decode('ascii')
-    except UnicodeDecodeError:
-        return False
-    else:
-        return True
 
 def getVids():
     # Parse meta info an return video IDs
@@ -107,24 +100,19 @@ def getInfo():
             writer.writerow(ret)
 
 
-def main(parser):
+def main(video_path):
     # getVids()
-    getInfo()
-
-    # options, args = parser.parse_args()
-    # video_path = os.path.join(args.store_path + args.source)
-    # os.mkdir(video_path)
+    # getInfo()
+    with open('./tables/vids3.txt', 'r', encoding='utf-8') as f:
+        vids = f.readlines()
     
-    # cmd_base = "yt-dlp -f best -f mp4 "
-    # cmd_base += '"https://www.youtube.com/watch?v=%s" '
-    # cmd_base += "-o %s"
-    # for vid in vids.items():
-    #     filename = os.path.join(video_path, vid+".mp4")
-    #     os.system(cmd_base % (vid, filename))
+    cmd_base = "yt-dlp -f best -f mp4 "
+    cmd_base += '"https://www.youtube.com/watch?v=%s" '
+    cmd_base += "-o %s"
+    for vid in vids:
+        vid = vid[1:12]
+        filename = os.path.join(video_path, vid+".mp4")
+        os.system(cmd_base % (vid, filename))
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument('-s',"--source", help="Column1")
-    parser.add_argument('-d',"--store_path", help="path to store")
-
-    main(parser)
+    main(video_path="/media/PJLAB\\liyanjun/DATA1/YtbEyeVideos")
