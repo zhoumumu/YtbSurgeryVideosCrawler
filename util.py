@@ -130,24 +130,24 @@ import shutil
 #     writer.writerows(rows)
 
 # analyze how many videos downloaded and left, compare with #total and #estimation
-count = {}
-estimate = {}
-with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file:
-    reader = csv.reader(file)
-    for row in reader:
-        if row[0] not in count:
-            count[row[0]] = 1
-        else:
-            count[row[0]] += 1
-with open('./tables/lowQualitySrcChannel.csv', 'r', newline='', encoding='utf-8') as file2:
-    reader2 = csv.reader(file2)
-    for row in reader2:
-        estimate[row[1]] = row[2]
-for k,v in estimate.items():
-    if k not in count:
-        print(k, "undownload")
-    elif int(v) > int(count[k]):
-        print(k, "total:", v, "\downloaded:", count[k])
+# count = {}
+# estimate = {}
+# with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file:
+#     reader = csv.reader(file)
+#     for row in reader:
+#         if row[0] not in count:
+#             count[row[0]] = 1
+#         else:
+#             count[row[0]] += 1
+# with open('./tables/lowQualitySrcChannel.csv', 'r', newline='', encoding='utf-8') as file2:
+#     reader2 = csv.reader(file2)
+#     for row in reader2:
+#         estimate[row[1]] = row[2]
+# for k,v in estimate.items():
+#     if k not in count:
+#         print(k, "undownload")
+#     elif int(v) > int(count[k]):
+#         print(k, "total:", v, "\downloaded:", count[k])
 
 # reorganize srcChannel.csv: move the downloaded channels to the front
 # downloaded = []
@@ -164,3 +164,22 @@ for k,v in estimate.items():
 # with open('./tables/lowQualitySrcChannel_re.csv', 'w', newline='', encoding='utf-8') as file:
 #     writer = csv.writer(file)
 #     writer.writerows(downloaded + unDownloaded)
+
+
+############################################
+# get vids
+# with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-8') as files,\
+#      open('./vids.txt', 'w') as filed:
+#     reader = csv.reader(files)
+#     for row in reader:
+#         filed.write(row[1]+'\n')
+
+# concate two csv files
+shutil.copyfile('./tables/vidInfo3_rawClassfied2.csv', './vidInfo3_rawClassified2.csv')
+shutil.copyfile('./tables/vidInfo3_rawClassified.csv', './vidInfo3_rawClassified.csv')
+with open('./tables/vidInfo3_rawClassified.csv', 'a', newline='', encoding='utf-8') as file,\
+     open('./tables/vidInfo3_rawClassfied2.csv', 'r', newline='', encoding='utf-8') as file2:
+    writer = csv.writer(file)
+    reader2 = csv.reader(file2)
+    for row in reader2:
+        writer.writerow(row)

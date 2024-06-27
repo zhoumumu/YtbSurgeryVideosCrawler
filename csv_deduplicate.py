@@ -19,5 +19,6 @@ def deduplicate(file_path):
         writer.writerows(rows)
     print(f"Remove {remove} duplicated rows.")
 
-shutil.copyfile("./tables/lowQualitySrcChannel.csv", "./lowQualitySrcChannel.csv")
-deduplicate("./tables/lowQualitySrcChannel.csv")
+file = "./tables/vidInfo3.csv"
+# shutil.copyfile(file, ".vidInfo3_backup.csv")
+deduplicate(file)

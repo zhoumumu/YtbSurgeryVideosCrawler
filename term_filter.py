@@ -6,6 +6,7 @@ translator = deep_translator.GoogleTranslator(source='auto', target='en')
 # process: <sourcelink, vid, TC, title, description, tags>
 # get: raw_classified file and npy file <vid, lables>
 
+#TODO 5.7w filtered to 5.4w, the rules are too loose
 
 categories = []
 with open('./tables/10cates.txt', 'r', encoding='utf-8') as file: #refined by professional
@@ -17,18 +18,19 @@ with open('./tables/10cates.txt', 'r', encoding='utf-8') as file: #refined by pr
 
 def detect_translate(row):
     new_row = row[:2]
-    # if len(row) < 3: print(row[1])
     for s in row[2:]:
         try:
             s.encode(encoding='utf-8').decode('ascii')
             new_row.append(s)
         except UnicodeDecodeError:
             try:
-                new_row.append(translator.translate(s))
+                trans = translator.translate(s)
+                if trans: new_row.append(trans)
+                else: new_row.append("") # special characters like •
             except deep_translator.exceptions.RequestError:
                 time.sleep(2) # google api allows 5 requests per second max
                 # new_row.append(translator.translate(s))
-                print(row[1])
+                print(row[1]) # TODO don't know why
                 new_row.append("")
     return new_row
 
@@ -49,10 +51,16 @@ def hit(infot):
     return list(hit), hit_cates
 
 
+def easy_resume(filePointer, last_vid='6QeW-huMDQA'):
+    for row in csv.reader(filePointer):
+        if last_vid in row[1]: break
+    
+    
 with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file,\
-     open("./tables/vidInfo3_rawClassfied.csv", 'a', newline='', encoding='utf-8') as filed:
-    writer = csv.writer(filed)
+     open("./tables/vidInfo3_rawClassfied2.csv", 'w', newline='', encoding='utf-8') as filed:
+    easy_resume(file)
     reader = csv.reader(file)
+    writer = csv.writer(filed)
     for row in reader:
         row = detect_translate(row)
         # rule1: filter by TC
@@ -63,7 +71,7 @@ with open('./tables/vidInfo3.csv', 'r', newline='', encoding='utf-8') as file,\
         # rule2: title should not contain
         if any(x in row[3] for x in ['examination', 'sign', 'symptoms', 'Tomography', 'observ', 'demonstration', 'animation']): continue
         
-        text = ' '.join(row[3:]) #TypeError: sequence item 2: expected str instance, NoneType found, row 27402
+        text = ' '.join(row[3:])
         h,hc = hit(text.lower())
         #rule3: discard rows with empty TC, and no hit, and contain non of these keywords
         if row[2] == '' and len(h) == 0 and \
