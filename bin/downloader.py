@@ -115,4 +115,4 @@ def main(video_path):
         os.system(cmd_base % (vid, filename))
 
 if __name__ == "__main__":
-    main(video_path="/media/PJLAB\\liyanjun/DATA1/YtbEyeVideos")
+    main(video_path=r"/media/PJLAB\\liyanjun/DATA1/YtbEyeVideos")
