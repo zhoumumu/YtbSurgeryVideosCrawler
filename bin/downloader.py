@@ -1,5 +1,4 @@
 from argparse import ArgumentParser
-import glob
 import json
 import os
 import csv
@@ -7,32 +6,18 @@ import optparse
 import playlist_items
 import channel_info
 import video_info
+from multiprocessing import Pool
 
 #HAVEDONE:
 # - 实现Youtube视频元数据解析，vid, title, description, tags存表
 
-def crosscheck_videos(video_path, ann_file):
-    # Get existing videos
-    existing_vids = glob.glob("%s/*.mp4" % video_path)
-    for idx, vid in enumerate(existing_vids):
-        basename = os.path.basename(vid).split(".mp4")[0]
-        if len(basename) == 13:
-            existing_vids[idx] = basename[2:]
-        elif len(basename) == 11:
-            existing_vids[idx] = basename
-        else:
-            raise RuntimeError("Unknown filename format: %s", vid)
-        
-    with open(ann_file, "r") as fobj:
-        anet_v_1_0 = json.load(fobj)
-    all_vids = anet_v_1_0["database"].keys()
-    non_existing_videos = []
-    for vid in all_vids:
-        if vid in existing_vids:
-            continue
-        else:
-            non_existing_videos.append(vid)
-    return non_existing_videos
+cmd = "yt-dlp -f best -f mp4 \'https://www.youtube.com/watch?v=%s\' -o ../../YtbEyeVideos/%s.mp4"
+def process(vid):
+    os.system(cmd % (vid, vid)) 
+
+def crosscheck_videos(video_path, vids): # Get non-existing videos
+    existing_vids = [video[:11] for video in os.listdir(video_path)]
+    return [vid[:11] for vid in vids if vid[:11] not in existing_vids]
 
 
 def getVids():
@@ -100,19 +85,15 @@ def getInfo():
             writer.writerow(ret)
 
 
-def main(video_path):
+def main():
     # getVids()
     # getInfo()
-    with open('./tables/vids3.txt', 'r', encoding='utf-8') as f:
+    with open('../tables/vids7w.txt', 'r', encoding='utf-8') as f:
         vids = f.readlines()
+    vids = crosscheck_videos("../../YtbEyeVideos", vids)
     
-    cmd_base = "yt-dlp -f best -f mp4 "
-    cmd_base += '"https://www.youtube.com/watch?v=%s" '
-    cmd_base += "-o %s"
-    for vid in vids:
-        vid = vid[1:12]
-        filename = os.path.join(video_path, vid+".mp4")
-        os.system(cmd_base % (vid, filename))
+    with Pool(processes=os.cpu_count()) as pool:
+        pool.map(process, vids)
 
 if __name__ == "__main__":
-    main(video_path=r"/media/PJLAB\\liyanjun/DATA1/YtbEyeVideos")
+    main()

@@ -28,3 +28,6 @@ vidInfo2.csv -> vidInfo_rawClassfied2.csv -> 手工补上singles.csv的分类，
 爬信息过程合并->vidInfo3.csv，后续用脚本去过重了
 上面爬断了的部分条目处理完NULL->samples.csv 用于分析topc catagory
 翻译并打上数字标签->vidInfo3_rawClassified.csv -> vids3.txt
+
+## 7.5
+vids.txt + vids2.txt + vids3.txt 去重 -> vids7w.txt

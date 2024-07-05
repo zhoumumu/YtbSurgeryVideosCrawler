@@ -168,11 +168,11 @@ import shutil
 
 ############################################
 # get vids
-with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-8') as files,\
-     open('./tables/vids3.txt', 'w') as filed:
-    reader = csv.reader(files)
-    for row in reader:
-        filed.write(row[1]+'\n')
+# with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-8') as files,\
+#      open('./tables/vids3.txt', 'w') as filed:
+#     reader = csv.reader(files)
+#     for row in reader:
+#         filed.write(row[1]+'\n')
 
 # concate two csv files
 # shutil.copyfile('./tables/vidInfo3_rawClassfied2.csv', './vidInfo3_rawClassified2.csv')
@@ -183,3 +183,15 @@ with open('./tables/vidInfo3_rawClassified.csv', 'r', newline='', encoding='utf-
 #     reader2 = csv.reader(file2)
 #     for row in reader2:
 #         writer.writerow(row)
+
+# concate three txt files
+# total = set()
+# with open('./tables/vids.txt', 'r') as file, open('./tables/vids2.txt', 'r') as file2,\
+#      open('./tables/vids3.txt', 'r') as file3, open('./tables/vids7w.txt', 'w') as file4:
+#     for vid in file.readlines():
+#         total.add(vid[:11])
+#     for vid in file2.readlines():
+#         total.add(vid[:11])
+#     for vid in file3.readlines():
+#         total.add(vid[1:12])  #多了引号
+#     file4.writelines('\n'.join(list(total)))
