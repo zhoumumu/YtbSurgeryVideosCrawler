@@ -11,7 +11,7 @@ from multiprocessing import Pool
 #HAVEDONE:
 # - 实现Youtube视频元数据解析，vid, title, description, tags存表
 
-cmd = "yt-dlp -f bestvideo -f mp4 \'https://www.youtube.com/watch?v=%s\' -o ../../YtbEyeVideos/%s.mp4"
+cmd = "yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -f mp4 \'https://www.youtube.com/watch?v=%s\' -o ../../YtbEyeVideos/%s.mp4"
 def process(vid):
     os.system(cmd % (vid, vid)) 
 
